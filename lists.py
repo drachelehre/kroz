@@ -1,10 +1,28 @@
 from monster import *
+from player import *
 
+# stats for each spell: cost, damage, element, accuracy penalty, special effect, bonus, duration (if
+# applicable)
 spells = {
-    'fireball': [10, 30, 'monster', 'fire'],
-    'arcane bolt': [5, 15, 'monster', 'occult']
+    'fireball': [10, 30, 'fire', 10, None, 0],
+    'arcane bolt': [5, 15, 'occult', 5, None, 0],
+    'eagle eye': [5, 0, None, 0, 'accuracy_boost', 20, 3],
+    'mist veil': [9, 0, None, 0, 'accuracy_penalty', 10, 3]
 }
 
-char_class = {'warrior': [10, -5, 8, 5, -5, -8],
-              'mage':{0, 10, 2, 1, 8, 5}}
-actions = ['attack', 'defend', 'magic', ]
+# adjustments are, in order: hp, mp, str, defense, magic, resistance, agility
+char_class = {'warrior': [10, -5, 8, 5, -5, -8, 4],
+              'mage': [2, 10, 2, -5, 8, 5, 5],
+              'rogue': [6, -3, 6, -3, 4, -3, 10],
+              'berserker': [15, -10, 10, 10, -10, -10, 0]}
+
+actions = ['attack', 'defend', 'magic', 'item']
+
+# weapon stats are: cost, weapon bonus and accuracy penalty
+char_weapons = {
+    'dagger': [10, 5, 0],
+    'bronze sword': [12, 8, -5],
+    'bronze axe': [18, 12, -8],
+    'club': [15, 9, -7]
+}
+
