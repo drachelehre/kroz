@@ -18,9 +18,9 @@ class Player(Creature):
         self.magic = 10
         self.resistance = 10
         self.agility = 10
-        self.weapon = None  # Store weapon as a string
-        self.weapon_bonus = 0  # Track attack boost separately
-        self.armor = None
+        self.weapon = 'unarmed'  # Store weapon as a string
+        self.weapon_bonus = 0 # Track attack boost separately
+        self.armor = 'unarmored'
         self.attack = self.str
         self.toughness = self.defense
         self.effects = {}
@@ -57,6 +57,39 @@ class Player(Creature):
         if char_class == 'mage':
             self.spellbook.append('arcane bolt')  # Add a starting spell for mages
 
+    def action(self, act, target):
+        act = act.lower()  # Normalize input to lowercase
+
+        match act:
+            case 'strike':
+                self.strike(target)
+
+            case 'defend':
+                self.effects['defending'] = [self.toughness * 2, 1]
+                print(f"{self.name} braces for impact, doubling defense for 1 turn!")
+
+            case 'magic':
+                for spell in self.spellbook:
+                    print(spell)
+
+                spell_cast = input("What do you want to cast? ").lower()
+
+                if spell_cast not in self.spellbook:
+                    print(f"{self.name} does not know {spell_cast}!")
+                    return
+                query = input("Are you casting on yourself (y/n)? ")
+
+                if query.lower() == 'y':
+                    target = None
+
+                if target is None:
+                    self.cast_spell(spell_cast)
+                else:
+                    self.cast_spell(spell_cast, target)
+
+            case _:
+                print("Invalid command. Available actions: strike, defend, magic.")
+
     def equip_weapon(self, weapon):
         weapon_stats = lists.char_weapons.get(weapon)
 
@@ -86,6 +119,28 @@ class Player(Creature):
             print('Spell is misspelled or does not exist!')
             return False
         self.spellbook.append(spell_name.lower())
+        return True
+
+    def strike(self, target):
+        weapon = lists.char_weapons[self.weapon]
+        _, bonus, accuracy_penalty = weapon
+        weapon_accuracy = max(0, self.accuracy - accuracy_penalty)  # Ensure accuracy isn't negative
+        check = random.randint(1, 100)  # Use 1-100 instead of 0-101
+
+        print(f"Weapon Accuracy: {weapon_accuracy} | Roll: {check}")  # Debugging info
+
+        if check > weapon_accuracy:
+            print("Missed!")
+            return
+
+        base_damage = self.str + bonus
+
+        if base_damage > 0:
+            min_damage = int(base_damage * 0.9)  # 90% of base damage
+            max_damage = int(base_damage * 1.1)  # 110% of base damage
+            final_damage = random.randint(min_damage, max_damage)  # Pick a random value in range
+            target.hp -= max(0, final_damage)  # Ensure damage isn't negative
+            print(f"{self.name} hits {target.name} with {self.weapon} for {final_damage} damage!")
         return True
 
     def cast_spell(self, spell_name, target=None):
@@ -140,8 +195,6 @@ class Player(Creature):
             final_damage = random.randint(min_damage, max_damage)  # Pick a random value in range
             target.hp -= max(0, final_damage)  # Ensure damage isn't negative
             print(f"{spell_name} hits {target.name} for {final_damage} {element} damage!")
-
-
         return True
 
     def take_damage(self, damage):
@@ -174,3 +227,6 @@ class Player(Creature):
             if effect == 'accuracy_penalty':
                 self.accuracy += value
                 print(f"{self.name}'s can see target normally again!")
+            if effect == "defending":
+                self.toughness = self.defense
+                print(f'{self.name} lowers their defense.')

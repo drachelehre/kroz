@@ -8,5 +8,5 @@ class Creature:
     def class_adjust(self, char_class):
         pass
 
-    def action(self):
+    def action(self, act, target):
         pass

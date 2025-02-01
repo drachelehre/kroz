@@ -16,10 +16,17 @@ char_class = {'warrior': [10, -5, 8, 5, -5, -8, 4],
               'rogue': [6, -3, 6, -3, 4, -3, 10],
               'berserker': [15, -10, 10, 10, -10, -10, 0]}
 
-actions = ['attack', 'defend', 'magic', 'item']
+monster_class = {'goblin': [],
+                 'ogre': [],
+                 'troll': [],
+
+                 }
+
+actions = ['strike', 'defend', 'magic', 'item']
 
 # weapon stats are: cost, weapon bonus and accuracy penalty
 char_weapons = {
+    'unarmed': [0, 1, 0],
     'dagger': [10, 5, 0],
     'bronze sword': [12, 8, -5],
     'bronze axe': [18, 12, -8],
