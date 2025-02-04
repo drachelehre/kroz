@@ -1,4 +1,4 @@
-from creature import *
+from creature import Creature
 import lists
 import random
 
@@ -57,7 +57,7 @@ class Player(Creature):
         if char_class == 'mage':
             self.spellbook.append('arcane bolt')  # Add a starting spell for mages
 
-    def action(self, act, target):
+    def action(self, act, target=None):
         act = act.lower()  # Normalize input to lowercase
 
         match act:
@@ -195,6 +195,7 @@ class Player(Creature):
             final_damage = random.randint(min_damage, max_damage)  # Pick a random value in range
             target.hp -= max(0, final_damage)  # Ensure damage isn't negative
             print(f"{spell_name} hits {target.name} for {final_damage} {element} damage!")
+            target.take_damage(final_damage)
         return True
 
     def take_damage(self, damage):

@@ -1,5 +1,4 @@
-from monster import *
-from player import *
+
 
 # stats for each spell: cost, damage, element, accuracy penalty, special effect, bonus, duration (if
 # applicable)
@@ -16,9 +15,9 @@ char_class = {'warrior': [10, -5, 8, 5, -5, -8, 4],
               'rogue': [6, -3, 6, -3, 4, -3, 10],
               'berserker': [15, -10, 10, 10, -10, -10, 0]}
 
-monster_class = {'goblin': [],
-                 'ogre': [],
-                 'troll': [],
+# monster class adjustment hp, mp, str, defense, magic, resistance, agility, abilities
+monster_class = {'goblin': [20, 10, 15, 12, 10, 10, 9, ['sunder']],
+                 'ogre': [30, 10, 25, 15, 0, 10, 5, ['sunder']],
 
                  }
 
@@ -33,3 +32,9 @@ char_weapons = {
     'club': [15, 9, -7]
 }
 
+# ability stats are: attack bonus, cooldown, accuracy penalty, special effect, effect intensity, effect duration
+monster_abilities = {
+    'rend': [10, 2, 10, None, 0, 0],
+    'sunder': [5, 3, 15, 'defense_down', 10, 3],
+    'thrash': [20, 5, 25, None, 0, 0]
+}
