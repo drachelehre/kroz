@@ -6,7 +6,9 @@ spells = {
     'fireball': [10, 30, 'fire', 10, None, 0],
     'arcane bolt': [5, 15, 'occult', 5, None, 0],
     'eagle eye': [5, 0, None, 0, 'accuracy_boost', 20, 3],
-    'mist veil': [9, 0, None, 0, 'accuracy_penalty', 10, 3]
+    'mist veil': [9, 0, None, 0, 'accuracy_penalty', 10, 3],
+    'bone chill': [15, 20, 'ice', 15, 'chilled', 0, 3],
+    'haste': [20, 0, None, 0, 'agility_boost']
 }
 
 # adjustments are, in order: hp, mp, str, defense, magic, resistance, agility

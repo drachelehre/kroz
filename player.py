@@ -176,17 +176,22 @@ class Player(Creature):
         if target is None:
             target = self
 
-        # Handle spell effects
-        if special_effect == 'accuracy_boost':
-            duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
-            target.effects['accuracy_boost'] = [bonus, duration]
-            target.accuracy += bonus  # Apply buff immediately
-            print(f"{target.name}'s accuracy increased by {bonus} for {duration} turns!")
-        if special_effect == 'accuracy_penalty':
-            duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
-            target.effects['accuracy_penalty'] = [bonus, duration]
-            target.accuracy -= bonus  # Apply buff immediately
-            print(f"{target.name}'s accuracy decreased by {bonus} for {duration} turns!")
+            # Handle spell effects
+            if special_effect == 'accuracy_boost':
+                duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
+                target.effects['accuracy_boost'] = [bonus, duration]
+                target.accuracy += bonus  # Apply buff immediately
+                print(f"{target.name}'s accuracy increased by {bonus} for {duration} turns!")
+            if special_effect == 'accuracy_penalty':
+                duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
+                target.effects['accuracy_penalty'] = [bonus, duration]
+                target.accuracy -= bonus  # Apply buff immediately
+                print(f"{target.name}'s accuracy decreased by {bonus} for {duration} turns!")
+            if special_effect == 'chilled':
+                duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
+                target.effects['chilled'] = [bonus, duration]
+                target.agility /= 2  # Apply buff immediately
+                print(f"{target.name}'s agility cut in half for {duration} turns!")
 
         # Apply 10% damage variation (±10%)
         if base_damage > 0:
@@ -227,7 +232,11 @@ class Player(Creature):
                 print(f"{self.name}'s accuracy returned to normal!")
             if effect == 'accuracy_penalty':
                 self.accuracy += value
-                print(f"{self.name}'s can see target normally again!")
+                print(f"{self.name} can see target normally again!")
             if effect == "defending":
                 self.toughness = self.defense
                 print(f'{self.name} lowers their defense.')
+            if effect == 'chilled':
+                self.agility *= 2
+                self.agility = int(self.agility)  # return to integer
+                print("f{self.name}\'s temperature is back to normal!")
