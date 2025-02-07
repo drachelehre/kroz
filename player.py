@@ -139,8 +139,8 @@ class Player(Creature):
             min_damage = int(base_damage * 0.9)  # 90% of base damage
             max_damage = int(base_damage * 1.1)  # 110% of base damage
             final_damage = random.randint(min_damage, max_damage)  # Pick a random value in range
-            target.hp -= max(0, final_damage)  # Ensure damage isn't negative
             print(f"{self.name} hits {target.name} with {self.weapon} for {final_damage} damage!")
+            target.take_damage(final_damage)
         return True
 
     def cast_spell(self, spell_name, target=None):
@@ -193,12 +193,17 @@ class Player(Creature):
                 target.agility /= 2  # Apply buff immediately
                 print(f"{target.name}'s agility cut in half for {duration} turns!")
 
-        # Apply 10% damage variation (±10%)
+        # Damage calculation for attacking spells
         if base_damage > 0:
+            # Determine if spell hits
+            spell_accuracy = max(0, self.accuracy - accuracy_penalty)  # Ensure accuracy isn't negative
+            check = random.randint(1, 100)  # Use 1-100 instead of 0-101
+
+            print(f"Spell Accuracy: {spell_accuracy} | Roll: {check}")  # Debugging info
+
             min_damage = int(base_damage * 0.9)  # 90% of base damage
             max_damage = int(base_damage * 1.1)  # 110% of base damage
             final_damage = random.randint(min_damage, max_damage)  # Pick a random value in range
-            target.hp -= max(0, final_damage)  # Ensure damage isn't negative
             print(f"{spell_name} hits {target.name} for {final_damage} {element} damage!")
             target.take_damage(final_damage)
         return True
@@ -233,10 +238,20 @@ class Player(Creature):
             if effect == 'accuracy_penalty':
                 self.accuracy += value
                 print(f"{self.name} can see target normally again!")
+            if effect == "attack_boost":
+                self.attack -= value  # Revert attack boost
+                print(f"{self.name}'s attack returned to normal!")
+            if effect == 'attack_penalty':
+                self.attack += value
+                print(f"{self.name} feels strong again!")
             if effect == "defending":
                 self.toughness = self.defense
                 print(f'{self.name} lowers their defense.')
             if effect == 'chilled':
                 self.agility *= 2
                 self.agility = int(self.agility)  # return to integer
-                print("f{self.name}\'s temperature is back to normal!")
+                print(f'{self.name}\'s temperature is back to normal!')
+            if effect == 'speed_boost':
+                self.agility /= 2
+                self.agility = int(self.agility)  # return to integer
+                print(f'{self.name}\'s speed is back to normal')

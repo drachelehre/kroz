@@ -63,24 +63,46 @@ class Monster(Creature):
         self.agility = agility
         self.abilities = abilities or []  # Ensure abilities is always a list
 
-    def use_ability(self, spell_name, target=None):
+    def strike(self, target):
+        weapon = lists.char_weapons[self.weapon]
+        _, bonus, accuracy_penalty = weapon
+        weapon_accuracy = max(0, self.accuracy - accuracy_penalty)  # Ensure accuracy isn't negative
+        check = random.randint(1, 100)  # Use 1-100 instead of 0-101
+
+        print(f"Weapon Accuracy: {weapon_accuracy} | Roll: {check}")  # Debugging info
+
+        if check > weapon_accuracy:
+            print("Missed!")
+            return
+
+        base_damage = self.str + bonus
+
+        if base_damage > 0:
+            min_damage = int(base_damage * 0.9)  # 90% of base damage
+            max_damage = int(base_damage * 1.1)  # 110% of base damage
+            final_damage = random.randint(min_damage, max_damage)  # Pick a random value in range
+            print(f"{self.name} hits {target.name} with {self.weapon} for {final_damage} damage!")
+            target.take_damage(final_damage)
+        return True
+
+    def use_ability(self, ability_name, target=None):
         print(f"Spellbook: {self.abilities}")  # Debugging output
 
         # Ensure the spell exists and the player has learned it
-        if spell_name not in lists.monster_abilities or spell_name not in self.abilities:
-            print(f"Spell '{spell_name}' not found or not learned!")
+        if ability_name not in lists.monster_abilities or ability_name not in self.abilities:
+            print(f"Spell '{ability_name}' not found or not learned!")
             return False
 
-        spell = lists.spells[spell_name]
+        spell = lists.spells[ability_name]
         cost, base_damage, element, accuracy_penalty, special_effect, bonus, *duration = spell
 
         # Ensure the player has enough MP
         if self.mp < cost:
-            print(f"{self.name} does not have enough MP to cast {spell_name}!")
+            print(f"{self.name} does not have enough MP to cast {ability_name}!")
             return False
 
         self.mp -= cost  # Deduct MP cost
-        print(f"{self.name} casts {spell_name}!")
+        print(f"{self.name} casts {ability_name}!")
 
         # Default target to self if not specified
         if target is None:
@@ -88,20 +110,21 @@ class Monster(Creature):
 
         # Handle spell effects
         if special_effect == 'accuracy_boost':
-            duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
+            duration = duration if duration else 3  # Default duration 3 turns if not specified
             target.effects['accuracy_boost'] = [bonus, duration]
             target.accuracy += bonus  # Apply buff immediately
             print(f"{target.name}'s accuracy increased by {bonus} for {duration} turns!")
         if special_effect == 'accuracy_penalty':
-            duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
+            duration = duration if duration else 3  # Default duration 3 turns if not specified
             target.effects['accuracy_penalty'] = [bonus, duration]
             target.accuracy -= bonus  # Apply buff immediately
             print(f"{target.name}'s accuracy decreased by {bonus} for {duration} turns!")
         if special_effect == 'chilled':
-            duration = duration[0] if duration else 3  # Default duration 3 turns if not specified
+            duration = duration if duration else 3  # Default duration 3 turns if not specified
             target.effects['chilled'] = [bonus, duration]
             target.agility /= 2  # Apply buff immediately
             print(f"{target.name}'s agility cut in half for {duration} turns!")
+
 
         # Apply 10% damage variation (±10%)
         if base_damage > 0:
@@ -119,7 +142,7 @@ class Monster(Creature):
             max_damage = int(base_damage * 1.1)  # 110% of base damage
             final_damage = random.randint(min_damage, max_damage)  # Pick a random value in range
             target.hp -= max(0, final_damage)  # Ensure damage isn't negative
-            print(f"{spell_name} hits {target.name} for {final_damage} {element} damage!")
+            print(f"{ability_name} hits {target.name} for {final_damage} {element} damage!")
             target.take_damage(final_damage)
         return True
 
@@ -153,11 +176,21 @@ class Monster(Creature):
             if effect == 'accuracy_penalty':
                 self.accuracy += value
                 print(f"{self.name} can see target normally again!")
+            if effect == "attack_boost":
+                self.attack -= value  # Revert attack boost
+                print(f"{self.name}'s attack returned to normal!")
+            if effect == 'attack_penalty':
+                self.attack += value
+                print(f"{self.name} feels strong again!")
             if effect == "defending":
                 self.toughness = self.defense
                 print(f'{self.name} lowers their defense.')
             if effect == 'chilled':
                 self.agility *= 2
-                self.agility = int(self.agility) # return to integer
-                print("f{self.name}\'s temperature is back to normal!")
+                self.agility = int(self.agility)  # return to integer
+                print(f'{self.name}\'s temperature is back to normal!')
+            if effect == 'speed_boost':
+                self.agility /= 2
+                self.agility = int(self.agility)  # return to integer
+                print(f'{self.name}\'s speed is back to normal')
 
