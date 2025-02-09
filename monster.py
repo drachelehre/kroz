@@ -6,12 +6,17 @@ import random
 class Monster(Creature):
     def __init__(self, name, mon_class):
         super().__init__(name, char_class=mon_class)
+        self.bonus_action = 0
+        self.action_used = 0
         self.hp_max = 0
         self.hp = self.hp_max
         self.mp_max = 0
         self.mp = self.mp_max
+        self.action_number = 1 + self.bonus_action
         self.str = 0
+        self.str_points = 0
         self.defense = 0
+        self.defense_points = 0
         self.magic = 0
         self.resistance = 0
         self.agility = 0
@@ -62,6 +67,39 @@ class Monster(Creature):
         self.resistance = res
         self.agility = agility
         self.abilities = abilities or []  # Ensure abilities is always a list
+
+    def action(self, act, target=None):
+        act = act.lower()  # Normalize input to lowercase
+
+        match act:
+            case 'strike':
+                self.strike(target)
+
+            case 'defend':
+                self.effects['defending'] = [self.toughness * 2, 1]
+                print(f"{self.name} braces for impact, doubling defense for 1 turn!")
+
+            case 'magic':
+                for ability in self.abilities:
+                    print(ability)
+
+                spell_cast = input("What do you want to cast? ").lower()
+
+                if spell_cast not in self.abilities:
+                    print(f"{self.name} does not know {spell_cast}!")
+                    return
+                query = input("Are you casting on yourself (y/n)? ")
+
+                if query.lower() == 'y':
+                    target = None
+
+                if target is None:
+                    self.use_ability(spell_cast)
+                else:
+                    self.use_ability(spell_cast, target)
+
+            case _:
+                print("Invalid command. Available actions: strike, defend, magic.")
 
     def strike(self, target):
         weapon = lists.char_weapons[self.weapon]
@@ -119,14 +157,14 @@ class Monster(Creature):
             target.effects['accuracy_penalty'] = [bonus, duration]
             target.accuracy -= bonus  # Apply buff immediately
             print(f"{target.name}'s accuracy decreased by {bonus} for {duration} turns!")
-        if special_effect == 'chilled':
+        if special_effect == 'speed_penalty':
             duration = duration if duration else 3  # Default duration 3 turns if not specified
-            target.effects['chilled'] = [bonus, duration]
+            target.effects['speed_penalty'] = [bonus, duration]
             target.agility /= 2  # Apply buff immediately
             print(f"{target.name}'s agility cut in half for {duration} turns!")
 
 
-        # Apply 10% damage variation (±10%)
+        # Accuracy and damage calulation
         if base_damage > 0:
             # Determine if spell hits
             ability_accuracy = max(0, self.accuracy - accuracy_penalty)  # Ensure accuracy isn't negative
@@ -158,39 +196,43 @@ class Monster(Creature):
 
     def effect_check(self):
         """Processes active buffs and removes expired ones at the start of each turn."""
-        to_remove = []
+        to_remove = list(self.effects.keys())  # Ensure safe removal of expired effects
 
-        for effect, (value, turns) in self.effects.items():
-            if turns > 1:
-                self.effects[effect][1] -= 1  # Decrease effect duration
-            else:
-                # Remove expired buffs
-                to_remove.append(effect)
-
-        # Remove buffs and revert effects
         for effect in to_remove:
-            value, _ = self.effects.pop(effect)
-            if effect == "accuracy_boost":
-                self.accuracy -= value  # Revert accuracy boost
-                print(f"{self.name}'s accuracy returned to normal!")
-            if effect == 'accuracy_penalty':
-                self.accuracy += value
-                print(f"{self.name} can see target normally again!")
-            if effect == "attack_boost":
-                self.attack -= value  # Revert attack boost
-                print(f"{self.name}'s attack returned to normal!")
-            if effect == 'attack_penalty':
-                self.attack += value
-                print(f"{self.name} feels strong again!")
-            if effect == "defending":
-                self.toughness = self.defense
-                print(f'{self.name} lowers their defense.')
-            if effect == 'chilled':
-                self.agility *= 2
-                self.agility = int(self.agility)  # return to integer
-                print(f'{self.name}\'s temperature is back to normal!')
-            if effect == 'speed_boost':
-                self.agility /= 2
-                self.agility = int(self.agility)  # return to integer
-                print(f'{self.name}\'s speed is back to normal')
+            value, turns = self.effects[effect]
+
+            if turns > 1:
+                self.effects[effect][1] -= 1  # Reduce duration
+            else:
+                self.effects.pop(effect)  # Remove effect
+
+                # Handle effect expiration
+                match effect:
+                    case "accuracy_boost":
+                        self.accuracy -= value
+                        print(f"{self.name}'s accuracy returned to normal!")
+                    case "accuracy_penalty":
+                        self.accuracy += value
+                        print(f"{self.name} can see normally again!")
+                    case "attack_boost":
+                        self.attack -= value
+                        print(f"{self.name}'s attack returned to normal!")
+                    case "attack_penalty":
+                        self.attack += value
+                        print(f"{self.name} feels strong again!")
+                    case "defending":
+                        self.toughness = self.defense
+                        print(f"{self.name} lowers their defense.")
+                    case "chilled":
+                        self.agility *= 2
+                        self.agility = int(self.agility)  # Ensure integer agility
+                        print(f"{self.name}'s temperature is back to normal!")
+                    case "speed_boost":
+                        self.agility /= 2
+                        self.agility = int(self.agility)
+                        print(f"{self.name}'s speed is back to normal!")
+
+    def pass_turn(self, other):
+        other.action_used = 0
+
 

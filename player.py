@@ -6,8 +6,12 @@ import random
 class Player(Creature):
     def __init__(self, name, char_class):
         super().__init__(name, char_class)
+        self.action_points = 1
+        self.bonus_action = 0
+        self.action_used = 0
         self.level = 1
         self.exp = 0
+        self.exp_max = 150
         self.gold = 100
         self.hp_max = 10
         self.hp = self.hp_max
@@ -220,38 +224,41 @@ class Player(Creature):
 
     def effect_check(self):
         """Processes active buffs and removes expired ones at the start of each turn."""
-        to_remove = []
+        to_remove = list(self.effects.keys())  # Ensure safe removal of expired effects
 
-        for effect, (value, turns) in self.effects.items():
-            if turns > 1:
-                self.effects[effect][1] -= 1  # Decrease effect duration
-            else:
-                # Remove expired buffs
-                to_remove.append(effect)
-
-        # Remove buffs and revert effects
         for effect in to_remove:
-            value, _ = self.effects.pop(effect)
-            if effect == "accuracy_boost":
-                self.accuracy -= value  # Revert accuracy boost
-                print(f"{self.name}'s accuracy returned to normal!")
-            if effect == 'accuracy_penalty':
-                self.accuracy += value
-                print(f"{self.name} can see target normally again!")
-            if effect == "attack_boost":
-                self.attack -= value  # Revert attack boost
-                print(f"{self.name}'s attack returned to normal!")
-            if effect == 'attack_penalty':
-                self.attack += value
-                print(f"{self.name} feels strong again!")
-            if effect == "defending":
-                self.toughness = self.defense
-                print(f'{self.name} lowers their defense.')
-            if effect == 'chilled':
-                self.agility *= 2
-                self.agility = int(self.agility)  # return to integer
-                print(f'{self.name}\'s temperature is back to normal!')
-            if effect == 'speed_boost':
-                self.agility /= 2
-                self.agility = int(self.agility)  # return to integer
-                print(f'{self.name}\'s speed is back to normal')
+            value, turns = self.effects[effect]
+
+            if turns > 1:
+                self.effects[effect][1] -= 1  # Reduce duration
+            else:
+                self.effects.pop(effect)  # Remove effect
+
+                # Handle effect expiration
+                match effect:
+                    case "accuracy_boost":
+                        self.accuracy -= value
+                        print(f"{self.name}'s accuracy returned to normal!")
+                    case "accuracy_penalty":
+                        self.accuracy += value
+                        print(f"{self.name} can see normally again!")
+                    case "attack_boost":
+                        self.attack -= value
+                        print(f"{self.name}'s attack returned to normal!")
+                    case "attack_penalty":
+                        self.attack += value
+                        print(f"{self.name} feels strong again!")
+                    case "defending":
+                        self.toughness = self.defense
+                        print(f"{self.name} lowers their defense.")
+                    case "chilled":
+                        self.agility *= 2
+                        self.agility = int(self.agility)  # Ensure integer agility
+                        print(f"{self.name}'s temperature is back to normal!")
+                    case "speed_boost":
+                        self.agility /= 2
+                        self.agility = int(self.agility)
+                        print(f"{self.name}'s speed is back to normal!")
+
+    def pass_turn(self, other):
+        other.action_used = 0
