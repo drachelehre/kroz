@@ -6,20 +6,26 @@ import random
 class Monster(Creature):
     def __init__(self, name, mon_class):
         super().__init__(name, char_class=mon_class)
+        self.points = 0
         self.bonus_action = 0
         self.action_used = 0
         self.hp_max = 0
+        self.hp_bonus = 0
         self.hp = self.hp_max
         self.mp_max = 0
         self.mp = self.mp_max
+        self.mp_bonus = 0
         self.action_number = 1 + self.bonus_action
         self.str = 0
-        self.str_points = 0
+        self.str_bonus = 0
         self.defense = 0
-        self.defense_points = 0
+        self.defense_bonus = 0
         self.magic = 0
+        self.magic_bonus = 0
         self.resistance = 0
+        self.resist_bonus = 0
         self.agility = 0
+        self.agility_bonus = 0
         self.weapon = 'unarmed'  # Store weapon as a string
         self.weapon_bonus = 0  # Track attack boost separately
         self.armor = 'unarmored'
@@ -163,7 +169,6 @@ class Monster(Creature):
             target.agility /= 2  # Apply buff immediately
             print(f"{target.name}'s agility cut in half for {duration} turns!")
 
-
         # Accuracy and damage calulation
         if base_damage > 0:
             # Determine if spell hits
@@ -232,7 +237,7 @@ class Monster(Creature):
                         self.agility = int(self.agility)
                         print(f"{self.name}'s speed is back to normal!")
 
-    def pass_turn(self, other):
-        other.action_used = 0
-
-
+    def point_buy(self, points):
+        print(f'Where will {self.name} put their points? ')
+        for point in range(points+1):
+            match
