@@ -1,5 +1,6 @@
 from player import *
 from monster import *
+import pickle
 from lists import *
 
 
@@ -104,10 +105,20 @@ def fight_loop():
             print(f'{player.name} is now level {player.level}.')
             player.class_adjust(player.char_class)
 
+def save():
+    name = input('Input save name: ')
+    filename = name + '.pkl'
+    print(filename)
+
+def load():
+    name = input('Input save name: ')
+    filename = name + '.pkl'
+    print(filename)
 
 def main():
-    fight_loop()
-
+    #fight_loop()
+    save()
+    load()
 
 
 if __name__ == '__main__':
