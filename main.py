@@ -4,12 +4,7 @@ import pickle
 from lists import *
 
 
-player = Player('test', 'warrior')
-
-monster = Monster('gob', 'goblin')
-player.hp = 4
-
-def fight_loop():
+def fight_loop(player, monster):
     player_counter = 0
     monster_counter = 0
     for item in lists.actions:
@@ -82,6 +77,7 @@ def fight_loop():
         player.exp += exp_gain
         points_gain = monster_counter
         monster.points += points_gain
+        player.wins += 1
         print(f'{player.name} is victorious!')
         print(f'{player.name} gains {gold_gain} gold and {exp_gain} experience!')
         print(f'{monster.name} gains only {points_gain} points')
@@ -97,6 +93,7 @@ def fight_loop():
         player.exp += exp_gain
         points_gain = monster_counter*2
         monster.points += points_gain
+        player.losses += 1
         print(f"{player.name} has been defeated!")
         print(f'{player.name} gains only {gold_gain} gold and {exp_gain} experience.')
         print(f'{monster.name} gains {points_gain} points')
@@ -105,20 +102,57 @@ def fight_loop():
             print(f'{player.name} is now level {player.level}.')
             player.class_adjust(player.char_class)
 
-def save():
-    name = input('Input save name: ')
-    filename = name + '.pkl'
-    print(filename)
 
-def load():
+def new_game():
+    new_name = input('Input player name: ')
+    new_char_class = input('Input class ')
+    player = Player(new_name, new_char_class)
+
+    new_mon = input('Name your foe: ')
+    monster = Monster(new_mon, 'goblin')
+
+    return player, monster
+
+
+def save(entity):
     name = input('Input save name: ')
     filename = name + '.pkl'
-    print(filename)
+    with open(filename, 'wb') as output:
+        pickle.dump(entity, output, pickle.HIGHEST_PROTOCOL)
+
+
+def load_player():
+    name = input('Input save name: ')
+    filename = name + '.pkl'
+    with open(filename, 'rb') as inp:
+        result = pickle.load(inp)
+    return result
+
+
+def load_monster():
+    name = input('Input save name: ')
+    filename = name + '.pkl'
+    with open(filename, 'rb') as inp:
+        result = pickle.load(inp)
+    return result
+
 
 def main():
-    #fight_loop()
+    player = None
+    monster = None
+    query = input('Load a player? ')
+    if query in ['y', 'yes']:
+        player = load_player()
+
+    query = input('Load a monster? ')
+    if query in ['y', 'yes']:
+        monster = load_monster()
+
+    if player is None or monster is None:
+        player, monster = new_game()
+    fight_loop(player, monster)
+
     save()
-    load()
 
 
 if __name__ == '__main__':

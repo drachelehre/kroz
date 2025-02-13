@@ -1,6 +1,7 @@
 from creature import Creature
 import lists
 import random
+import gym
 
 
 class Player(Creature):
@@ -9,6 +10,8 @@ class Player(Creature):
         self.action_points = 1
         self.bonus_action = 0
         self.action_used = 0
+        self.wins = 0
+        self.losses = 0
         self.level = 1
         self.exp = 0
         self.exp_max = 150
