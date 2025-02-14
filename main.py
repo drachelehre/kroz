@@ -5,13 +5,12 @@ from lists import *
 
 
 def fight_loop(player, monster):
-    player_counter = 0
-    monster_counter = 0
+
     for item in lists.actions:
         print(item.capitalize())
 
     while player.hp > 0 and monster.hp > 0: # Player goes first
-        player_counter += 1
+        player.turn_counter += 1
         if player.agility > monster.agility:
             while player.action_used != player.action_points:
                 print(f'It\'s {player.name}\'s turn!')
@@ -28,7 +27,7 @@ def fight_loop(player, monster):
             player.action_used = 0
             if monster.hp == 0:
                 break
-            monster_counter += 1
+            monster.turn_counter += 1
             while monster.action_used != monster.action_number:
                 action = input(f'What will {monster.name} do?')
                 if action.lower() == 'strike' or 'magic':
@@ -42,7 +41,7 @@ def fight_loop(player, monster):
             monster.action_used = 0
 
         else: # Monster goes first
-            monster_counter += 1
+            monster.turn_counter += 1
             while monster.action_used != monster.action_number:
                 action = input(f'What will {monster.name} do?')
                 if action.lower == 'strike' or 'magic':
@@ -56,7 +55,7 @@ def fight_loop(player, monster):
             if player.hp == 0:
                 break
 
-            player_counter += 1
+            player.turn_counter += 1
 
             while player.action_used != player.action_points:
                 print(f'It\'s {player.name}\'s turn!')
@@ -71,11 +70,11 @@ def fight_loop(player, monster):
 
     if player.hp > 0:
 
-        gold_gain = 100 * player_counter
+        gold_gain = 100 * player.turn_counter
         player.gold += gold_gain
-        exp_gain = 50 * player_counter
+        exp_gain = 50 * player.turn_counter
         player.exp += exp_gain
-        points_gain = monster_counter
+        points_gain = monster.turn_counter
         monster.points += points_gain
         player.wins += 1
         print(f'{player.name} is victorious!')
@@ -87,11 +86,11 @@ def fight_loop(player, monster):
             player.class_adjust(player.char_class)
 
     elif player.hp <= 0:  # Player loses
-        gold_gain = 50 * player_counter
+        gold_gain = 50 * player.turn_counter
         player.gold += gold_gain
-        exp_gain = 25 * player_counter
+        exp_gain = 25 * player.turn_counter
         player.exp += exp_gain
-        points_gain = monster_counter*2
+        points_gain = monster.turn_counter*2
         monster.points += points_gain
         player.losses += 1
         print(f"{player.name} has been defeated!")
@@ -99,6 +98,8 @@ def fight_loop(player, monster):
         print(f'{monster.name} gains {points_gain} points')
         if player.exp >= player.exp_max:
             player.level += 1
+            player.exp = 0
+            player.exp_max = player.exp_max * 2
             print(f'{player.name} is now level {player.level}.')
             player.class_adjust(player.char_class)
 

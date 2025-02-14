@@ -23,6 +23,7 @@ class GameEnv(gym.Env):
         """Reset the environment at the start of a new episode."""
         self.player.hp = self.player.hp_max
         self.enemy.hp = self.enemy.hp_max
+        self.player.turn_counter = 0
         return self._get_observation()
 
     def step(self, action):
@@ -34,9 +35,11 @@ class GameEnv(gym.Env):
         elif action == 2:  # Cast Spell (random spell for now)
             if self.player.spellbook:
                 self.player.cast_spell(self.player.spellbook[0], self.enemy)
+        elif action == 3: # Use item
+            pass
 
         # Calculate reward (e.g., damage dealt, surviving longer)
-        reward = self.enemy.hp_max - self.enemy.hp  # Reward for damage dealt
+        reward = self.player.turn_counter + (self.enemy.hp_max - self.enemy.hp)  # Reward for damage dealt
         done = self.enemy.hp <= 0 or self.player.hp <= 0  # Episode ends if someone dies
 
         return self._get_observation(), reward, done, {}

@@ -6,6 +6,7 @@ import random
 class Monster(Creature):
     def __init__(self, name, mon_class):
         super().__init__(name, char_class=mon_class)
+        self.turn_counter = 0
         self.points = 0
         self.bonus_action = 0
         self.action_used = 0

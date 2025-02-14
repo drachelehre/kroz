@@ -7,6 +7,7 @@ import gym
 class Player(Creature):
     def __init__(self, name, char_class):
         super().__init__(name, char_class)
+        self.turn_counter = 0
         self.action_points = 1
         self.bonus_action = 0
         self.action_used = 0
@@ -33,6 +34,7 @@ class Player(Creature):
         self.effects = {}
         self.accuracy = 100
         self.spellbook = []
+        self.inventory = []
         self.class_adjust(char_class)
 
     def __repr__(self):
@@ -76,8 +78,7 @@ class Player(Creature):
                 print(f"{self.name} braces for impact, doubling defense for 1 turn!")
 
             case 'magic':
-                for spell in self.spellbook:
-                    print(spell)
+                print(spell for spell in self.spellbook)
 
                 spell_cast = input("What do you want to cast? ").lower()
 
@@ -93,6 +94,9 @@ class Player(Creature):
                     self.cast_spell(spell_cast)
                 else:
                     self.cast_spell(spell_cast, target)
+
+            case 'item':
+                print(item for item in self.inventory)
 
             case _:
                 print("Invalid command. Available actions: strike, defend, magic.")
@@ -214,6 +218,9 @@ class Player(Creature):
             print(f"{spell_name} hits {target.name} for {final_damage} {element} damage!")
             target.take_damage(final_damage)
         return True
+
+    def use_item(self, target=None):
+        pass
 
     def take_damage(self, damage):
         self.hp -= damage

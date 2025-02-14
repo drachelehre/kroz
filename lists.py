@@ -19,7 +19,8 @@ char_class = {'warrior': [10, -5, 8, 5, -5, -8, 4],
 
 # monster class adjustment hp, mp, str, defense, magic, resistance, agility, abilities
 monster_class = {'goblin': [20, 10, 15, 12, 10, 10, 9, ['sunder']],
-                 'ogre': [30, 10, 25, 15, 0, 10, 5, ['sunder']],
+                 'ogre': [30, 10, 25, 15, 0, 10, 5, ['rend', 'sunder']],
+                 'orc': [40, 5, 30, 20, 5, 2, 10, ['rend', 'thrash']]
 
                  }
 
@@ -29,10 +30,14 @@ actions = ['strike', 'defend', 'magic', 'item']
 char_weapons = {
     'unarmed': [0, 1, 0],
     'dagger': [10, 5, 0],
-    'bronze sword': [12, 8, -5],
-    'bronze axe': [18, 12, -8],
-    'club': [15, 9, -7]
+    'bronze sword': [12, 8, 5],
+    'bronze axe': [18, 12, 8],
+    'club': [15, 9, 7],
+    'sling': [5, 2, 6],
+
 }
+
+char_armor = {}
 
 # ability stats are: attack bonus, cooldown, accuracy penalty, special effect, effect intensity, effect duration
 monster_abilities = {
