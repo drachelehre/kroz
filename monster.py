@@ -139,7 +139,7 @@ class Monster(Creature):
             return False
 
         spell = lists.spells[ability_name]
-        cost, base_damage, element, accuracy_penalty, special_effect, bonus, *duration = spell
+        cost, base_damage, cooldown, element, accuracy_penalty, special_effect, bonus, *duration = spell
 
         # Ensure the player has enough MP
         if self.mp < cost:
@@ -239,6 +239,9 @@ class Monster(Creature):
                         print(f"{self.name}'s speed is back to normal!")
 
     def point_buy(self, points):
+        pass
+        '''
         print(f'Where will {self.name} put their points? ')
         for point in range(points+1):
             match
+        '''

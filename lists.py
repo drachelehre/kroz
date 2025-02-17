@@ -39,9 +39,13 @@ char_weapons = {
 
 char_armor = {}
 
-# ability stats are: attack bonus, cooldown, accuracy penalty, special effect, effect intensity, effect duration
+# ability stats are: attack bonus, cooldown, accuracy penalty, element, special effect, effect intensity, effect duration
 monster_abilities = {
-    'rend': [10, 2, 10, None, 0, 0],
-    'sunder': [5, 3, 15, 'defense_down', 10, 3],
-    'thrash': [20, 5, 25, None, 0, 0]
+    'rend': [10, 2, 10, 'physical', None, 0, 0],
+    'sunder': [5, 3, 15, 'physical', 'defense_down', 10, 3],
+    'thrash': [20, 5, 25, 'physical', None, 0, 0],
+    'fire breath': [50, 8, 5, 'fire', None, 0, 0],
+    'frost breath': [45, 8, 5, 'ice', 'speed_penalty', 20, 4],
+    'lightning breath': [45, 8, 5, 'lightning', 'accuracy_penalty', 30, 4]
+
 }
