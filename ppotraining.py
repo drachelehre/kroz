@@ -1,8 +1,10 @@
 import gym
-from gym import spaces
 import numpy as np
-from player import Player  # Import your player class
+from gym import spaces
+from stable_baselines3 import PPO
+
 from monster import Monster  # Import your monster class
+from player import Player  # Import your player class
 
 
 class GameEnv(gym.Env):
@@ -48,3 +50,18 @@ class GameEnv(gym.Env):
         """Return current state as an observation."""
         return np.array([self.player.hp, self.player.mp, self.enemy.hp, self.enemy.mp], dtype=np.float32)
 
+
+def train_player():
+    env = GameEnv()
+    # Initialize the PPO model
+    model = PPO("MlpPolicy", env, verbose=1)
+
+    # Train the model
+    model.learn(total_timesteps=10000)
+
+    # Save the trained model
+    model.save("ppo_game_ai")
+
+
+if __name__ == '__main__':
+    train_player()

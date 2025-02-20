@@ -47,5 +47,4 @@ monster_abilities = {
     'fire breath': [50, 8, 5, 'fire', None, 0, 0],
     'frost breath': [45, 8, 5, 'ice', 'speed_penalty', 20, 4],
     'lightning breath': [45, 8, 5, 'lightning', 'accuracy_penalty', 30, 4]
-
 }

@@ -239,9 +239,10 @@ class Monster(Creature):
                         print(f"{self.name}'s speed is back to normal!")
 
     def point_buy(self, points):
-        pass
-        '''
         print(f'Where will {self.name} put their points? ')
+        print('Choices: HP, MP, Strength')
         for point in range(points+1):
-            match
-        '''
+            choice = input('Chooses stat: ').lower()
+            match choice:
+                case
+
