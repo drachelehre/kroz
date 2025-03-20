@@ -153,7 +153,8 @@ def main():
         player, monster = new_game()
     fight_loop(player, monster)
 
-    save()
+    save(player)
+    save(monster)
 
 
 if __name__ == '__main__':

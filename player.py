@@ -270,5 +270,18 @@ class Player(Creature):
                         self.agility = int(self.agility)
                         print(f"{self.name}'s speed is back to normal!")
 
+    def level_up(self):
+        self.level += 1
+        print(f'{self.name} is now level {self.level}!')
+        self.class_adjust(self.char_class)
+        if self.char_class == 'mage' and self.level % 2 != 0:
+            spell_list = lists.spells
+            print("Choose a spell:")
+            print('Name     MP Cost     Power')
+            print('--------------------------')
+            for spell in spell_list:
+                print(f'{spell}     {spell_list[spell][0}}      {spell_list[spell][1]}')
+
+
     def pass_turn(self, other):
         other.action_used = 0
