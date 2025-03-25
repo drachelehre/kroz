@@ -37,7 +37,13 @@ char_weapons = {
 
 }
 
-char_armor = {}
+# armor stats: cost, defense bonus, weight, metal (true/false)
+char_armor = {
+    'gambeson': [10, 7, 'light', False],
+    'leather': [12, 10, False],
+    'studded': [15, 13, True]
+
+}
 
 # ability stats are: attack bonus, cooldown, accuracy penalty, element, special effect, effect intensity, effect duration
 monster_abilities = {
@@ -47,4 +53,12 @@ monster_abilities = {
     'fire breath': [50, 8, 5, 'fire', None, 0, 0],
     'frost breath': [45, 8, 5, 'ice', 'speed_penalty', 20, 4],
     'lightning breath': [45, 8, 5, 'lightning', 'accuracy_penalty', 30, 4]
+}
+
+# item stats: effect, cost,
+items = {
+    "small heal potion": ['heal', 20, 25, 0],
+    'mid heal potion': ['heal', 100, 50, 0],
+    'large heal potion': ['heal', 500, 500, 0],
+    'muscle potion': []
 }

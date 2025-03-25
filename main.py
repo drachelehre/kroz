@@ -81,9 +81,7 @@ def fight_loop(player, monster):
         print(f'{player.name} gains {gold_gain} gold and {exp_gain} experience!')
         print(f'{monster.name} gains only {points_gain} points')
         if player.exp >= player.exp_max:
-            player.level += 1
-            print(f'{player.name} is now level {player.level}!')
-            player.class_adjust(player.char_class)
+            player.level_up()
 
     elif player.hp <= 0:  # Player loses
         gold_gain = 50 * player.turn_counter

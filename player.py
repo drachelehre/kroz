@@ -98,6 +98,8 @@ class Player(Creature):
             case 'item':
                 print(item for item in self.inventory)
 
+                item_use = input("Which item will you use? ")
+
             case _:
                 print("Invalid command. Available actions: strike, defend, magic.")
 
@@ -220,7 +222,8 @@ class Player(Creature):
         return True
 
     def use_item(self, target=None):
-        pass
+        if not self.inventory:
+            print(f'{self.name} has no items')
 
     def take_damage(self, damage):
         self.hp -= damage
@@ -280,8 +283,8 @@ class Player(Creature):
             print('Name     MP Cost     Power')
             print('--------------------------')
             for spell in spell_list:
-                print(f'{spell}     {spell_list[spell][0}}      {spell_list[spell][1]}')
+                print(f'{spell}     {spell_list[spell][0]}      {spell_list[spell][1]}')
 
-
-    def pass_turn(self, other):
+    @staticmethod
+    def pass_turn(other):
         other.action_used = 0
