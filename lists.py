@@ -1,4 +1,4 @@
-
+import random
 
 # stats for each spell: cost, damage, element, accuracy penalty, special effect, bonus, duration (if
 # applicable)
@@ -20,7 +20,8 @@ char_class = {'warrior': [10, -5, 8, 5, -5, -8, 4],
 # monster class adjustment hp, mp, str, defense, magic, resistance, agility, abilities
 monster_class = {'goblin': [20, 10, 15, 12, 10, 10, 9, ['sunder']],
                  'ogre': [30, 10, 25, 15, 0, 10, 5, ['rend', 'sunder']],
-                 'orc': [40, 5, 30, 20, 5, 2, 10, ['rend', 'thrash']]
+                 'orc': [40, 5, 30, 20, 5, 2, 10, ['rend', 'thrash']],
+                 'dragon': [90, 0, 50, 40, 60, 60, 20, [random.choice(['fire breath', 'frost breath', 'lightning breath'])]]
 
                  }
 
@@ -40,8 +41,11 @@ char_weapons = {
 # armor stats: cost, defense bonus, weight, metal (true/false)
 char_armor = {
     'gambeson': [10, 7, 'light', False],
-    'leather': [12, 10, False],
-    'studded': [15, 13, True]
+    'leather': [12, 10, 'light', False],
+    'studded': [15, 13, 'light', True],
+    'padded furs': [20, 13, 'medium', False],
+    'chain shirt': [30, 16, 'medium', False],
+    'slatted armor': [60, 22, 'medium', True]
 
 }
 

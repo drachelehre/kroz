@@ -40,7 +40,7 @@ def fight_loop(player, monster):
 
             monster.action_used = 0
 
-        else: # Monster goes first
+        else:  # Monster goes first
             monster.turn_counter += 1
             while monster.action_used != monster.action_number:
                 action = input(f'What will {monster.name} do?')
